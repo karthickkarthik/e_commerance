@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jewellery - Flipmart</title>
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2838/2838823.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .category-container { padding: 40px 20px; background: linear-gradient(135deg, #e3f2fd 0%, #f5f5f5 100%); }
+        .category-header { text-align: center; margin-bottom: 50px; }
+        .category-header h1 { font-size: 48px; color: #283593; font-weight: 900; margin-bottom: 15px; letter-spacing: 2px; }
+        .category-header p { font-size: 18px; color: #666; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+        .product-item { background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%); border-radius: 16px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.1); transition: all 0.4s; border: 1px solid #e0e0e0; }
+        .product-item:hover { transform: translateY(-8px); box-shadow: 0 12px 35px rgba(0,0,0,0.15); }
+        .product-image { height: 300px; background: #f9f9f9; overflow: hidden; position: relative; }
+        .product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .product-item:hover .product-image img { transform: scale(1.05); }
+        .product-badge { position: absolute; top: 12px; left: 12px; background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%); color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; text-transform: uppercase; }
+        .product-info { padding: 20px; }
+        .product-info h3 { font-size: 18px; color: #212121; font-weight: 700; margin-bottom: 12px; }
+        .product-price { display: flex; gap: 12px; margin-bottom: 15px; }
+        .current-price { font-size: 22px; font-weight: 900; color: #3949ab; }
+        .old-price { font-size: 16px; color: #999; text-decoration: line-through; }
+        .btn-add-cart { width: 100%; padding: 12px; background: linear-gradient(135deg, #3949ab 0%, #283593 100%); color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s; }
+        .btn-add-cart:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(57, 73, 171, 0.4); }
+    </style>
+</head>
+<body>
+    <div class="utility-bar"><div class="container"><div class="utility-left"><select class="utility-select"><option>USD</option></select><select class="utility-select"><option>English</option></select><a href="account.html" class="utility-link"><i class="fas fa-user"></i> My Account</a><a href="wishlist.html" class="utility-link"><i class="fas fa-heart"></i> Wishlist</a></div><div class="utility-right"><a href="cart.html" class="utility-link"><i class="fas fa-shopping-cart"></i> My Cart</a><a href="checkout.html" class="utility-link"><i class="fas fa-check"></i> Checkout</a><a href="login.html" class="utility-link"><i class="fas fa-sign-in-alt"></i> Login</a></div></div></div>
+    <header class="main-header"><div class="container"><div class="header-content"><a href="index.html" class="logo"><span class="logo-text">Flip<span class="logo-accent">mart</span></span></a><div class="search-bar"><select class="categories-dropdown"><option>Categories</option></select><input type="text" placeholder="Search here..." class="search-input"><button class="search-btn"><i class="fas fa-search"></i></button></div><div class="cart-summary"><i class="fas fa-shopping-bag"></i><div class="cart-info"><span class="cart-label">CART</span><span class="cart-price">$600.00</span></div></div></div></div></header>
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="clothing.html">CLOTHING</a></li>
+                <li><a href="electronics.html">ELECTRONICS</a></li>
+                <li><a href="health-beauty.html">HEALTH & BEAUTY</a></li>
+                <li><a href="watches.html">WATCHES</a></li>
+                <li><a href="jewellery.html">JEWELLERY</a></li>
+                <li><a href="shoes.html">SHOES</a></li>
+                <li><a href="kids.html">KIDS & GIRLS</a></li>
+                
+                <li class="nav-offer"><a href="#">TODAYS OFFER</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="category-container"><div class="category-header"><h1><i class="fas fa-gem"></i> JEWELLERY</h1><p>Sparkle with our exclusive collection</p></div><div class="products-grid" id="productsGrid"></div></div>
+    <script>
+        // Map image sources based on alt text (product title)
+        const altToImage = {
+          'Diamond Ring': 'https://images.pexels.com/photos/691046/pexels-photo-691046.jpeg',
+          'Gold Necklace': 'https://media.istockphoto.com/id/1204681180/photo/happy-couple.jpg?s=1024x1024&w=is&k=20&c=u3-9Kr4TGJHHJDRxCG6DhKpXtDFFXHTU3_3WqYgkLe0=',
+          'Pearl Earrings': 'https://images.pexels.com/photos/34544786/pexels-photo-34544786/free-photo-of-elegant-assorted-jewelry-on-blue-ceramic-dish.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+          'Silver Bracelet': 'https://images.pexels.com/photos/10330415/pexels-photo-10330415.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+          'Rose Gold Pendant': 'https://images.pexels.com/photos/4595725/pexels-photo-4595725.jpeg',
+          'Diamond Earrings': 'https://images.pexels.com/photos/34542609/pexels-photo-34542609.jpeg',
+          'Charm Bracelet': 'https://media.istockphoto.com/id/2231787128/photo/elegant-beaded-bracelet-with-crystal-charms-on-the-hand.jpg?s=1024x1024&w=is&k=20&c=LVd4a0KsMylm5aMzOZFsgPJrCqHUc9zJBKnTpgCoTWY=',
+          'Platinum Chain': 'https://images.pexels.com/photos/27357183/pexels-photo-27357183.jpeg'
+        };
+
+        // Product data (image will be chosen via alt text mapping)
+        const jewelleryProducts = [
+          { title: 'Diamond Ring', price: 1299.99, oldPrice: 1799.99, badge: 'NEW' },
+          { title: 'Gold Necklace', price: 899.99, oldPrice: 1199.99, badge: 'HOT' },
+          { title: 'Pearl Earrings', price: 299.99, oldPrice: 449.99, badge: 'SALE' },
+          { title: 'Silver Bracelet', price: 199.99, oldPrice: 299.99, badge: 'NEW' },
+          { title: 'Rose Gold Pendant', price: 449.99, oldPrice: 599.99, badge: 'HOT' },
+          { title: 'Diamond Earrings', price: 999.99, oldPrice: 1399.99, badge: 'SALE' },
+          { title: 'Charm Bracelet', price: 149.99, oldPrice: 229.99, badge: 'NEW' },
+          { title: 'Platinum Chain', price: 799.99, oldPrice: 1099.99, badge: 'HOT' }
+        ];
+
+        function generateProducts() {
+            const html = jewelleryProducts.map(p => {
+                const imgSrc = altToImage[p.title] || 'images/hero-pattern.svg';
+                return `
+                <div class="product-item"><div class="product-image"><img src="${imgSrc}" alt="${p.title}"><div class="product-badge">${p.badge}</div><button class="wishlist-btn" title="Add to wishlist"><i class="far fa-heart"></i></button></div><div class="product-info"><h3>${p.title}</h3><div class="product-price"><span class="current-price">$${p.price.toFixed(2)}</span><span class="old-price">$${p.oldPrice.toFixed(2)}</span></div><button class="btn-add-cart" onclick="alert('${p.title} added!')"><i class="fas fa-shopping-cart"></i> Add to Cart</button></div></div>
+                `;
+            }).join('');
+            document.getElementById('productsGrid').innerHTML = html;
+        }
+        // Wishlist button functionality
+        document.addEventListener('click', function(e) {
+            const wishlistBtn = e.target.closest('.wishlist-btn');
+            if (wishlistBtn) {
+                e.preventDefault();
+                const icon = wishlistBtn.querySelector('i');
+                if (icon) {
+                    if (icon.classList.contains('far')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        wishlistBtn.classList.add('active');
+                        window.location.href = 'wishlist.html';
+                    } else {
+                        window.location.href = 'wishlist.html';
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', generateProducts);
+    </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist - Flipmart</title>
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2838/2838823.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="utility-bar">
+        <div class="container">
+            <div class="utility-left">
+                <select class="utility-select"><option>USD</option></select>
+                <select class="utility-select"><option>English</option></select>
+                <a href="account.html" class="utility-link"><i class="fas fa-user"></i> My Account</a>
+                <a href="wishlist.html" class="utility-link"><i class="fas fa-heart"></i> Wishlist</a>
+            </div>
+            <div class="utility-right">
+                <a href="cart.html" class="utility-link"><i class="fas fa-shopping-cart"></i> My Cart</a>
+                <a href="checkout.html" class="utility-link"><i class="fas fa-check"></i> Checkout</a>
+                <a href="login.html" class="utility-link"><i class="fas fa-sign-in-alt"></i> Login</a>
+            </div>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo" aria-label="Flipmart Home"><span class="logo-text">Flip<span class="logo-accent">mart</span></span></a>
+                <div class="search-bar">
+                    <select class="categories-dropdown"><option>Categories</option></select>
+                    <input type="text" placeholder="Search here..." class="search-input">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="cart-summary">
+                    <i class="fas fa-shopping-bag"></i>
+                    <div class="cart-info"><span class="cart-label">CART</span><span class="cart-price">$0.00</span></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="clothing.html">CLOTHING</a></li>
+                <li><a href="electronics.html">ELECTRONICS</a></li>
+                <li><a href="health-beauty.html">HEALTH & BEAUTY</a></li>
+                <li><a href="watches.html">WATCHES</a></li>
+                <li><a href="jewellery.html">JEWELLERY</a></li>
+                <li><a href="shoes.html">SHOES</a></li>
+                <li><a href="kids.html">KIDS & GIRLS</a></li>
+                <li class="nav-offer"><a href="todays-offer.html">TODAYS OFFER</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" style="padding: 20px 15px;">
+        <section class="section">
+            <div class="section-header">
+                <h2>WISHLIST</h2>
+            </div>
+            <div id="wishlistContainer" class="products-grid"></div>
+            <div id="wishlistEmpty" style="display:none; text-align:center; padding:40px; color:#666;">Your wishlist is empty.</div>
+        </section>
+    </div>
+
+    <script>
+        // Expected localStorage format: wishlist = [{title, price, oldPrice, image}]
+        function loadWishlist() {
+            const container = document.getElementById('wishlistContainer');
+            const empty = document.getElementById('wishlistEmpty');
+            let items = [];
+            try {
+                items = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            } catch (_) { items = []; }
+
+            if (!items.length) {
+                container.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+            container.innerHTML = items.map(p => `
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="${p.image}" alt="${p.title}" class="product-img">
+                        <span class="badge sale">WISH</span>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">${p.title}</h3>
+                        <div class="product-price">
+                            ${p.price ? `<span class="current-price">$${Number(p.price).toFixed(2)}</span>` : ''}
+                            ${p.oldPrice ? `<span class="old-price">$${Number(p.oldPrice).toFixed(2)}</span>` : ''}
+                        </div>
+                        <button class="btn-add-cart" onclick="removeFromWishlist('${encodeURIComponent(p.title)}')"><i class="fas fa-trash"></i> Remove</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeFromWishlist(encodedTitle) {
+            const title = decodeURIComponent(encodedTitle);
+            const items = JSON.parse(localStorage.getItem('wishlist') || '[]').filter(p => p.title !== title);
+            localStorage.setItem('wishlist', JSON.stringify(items));
+            loadWishlist();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadWishlist);
+    </script>
+</body>
+</html>
+
+
+
+
